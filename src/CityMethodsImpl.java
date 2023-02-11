@@ -9,7 +9,7 @@
 public class CityMethodsImpl implements CityMethods {
 
     @Override
-    public City readFile() {
+    public City[] readFile() {
         return null;
     }
 

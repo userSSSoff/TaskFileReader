@@ -1,5 +1,5 @@
 public interface CityMethods {
-    City readFile();
+    City[] readFile();
 
     void printAllCities(City[] cities);
 }
