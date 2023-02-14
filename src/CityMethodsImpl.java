@@ -10,11 +10,22 @@ public class CityMethodsImpl implements CityMethods {
 
     @Override
     public City[] readFile() {
+
         return null;
     }
 
     @Override
     public void printAllCities(City[] cities) {
+
+    }
+
+    @Override
+    public void groupByRegion(City[] cities) {
+
+    }
+
+    @Override
+    public void searchByName(String name) {
 
     }
 }
