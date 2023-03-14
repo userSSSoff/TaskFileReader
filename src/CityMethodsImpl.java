@@ -5,6 +5,7 @@
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 // TODO: 11.02.2023
@@ -12,50 +13,85 @@ import java.util.Scanner;
 //  Вся суть printAllCities() заключается в том, что надо вывести все города на консоль.
 public class CityMethodsImpl implements CityMethods {
 
+
     @Override
     public City[] readFile() {
         City[] cities = new City[1109];
-        try {
-            FileReader fileReader = new FileReader("city_ru.csv");
-            Scanner scanner = new Scanner(fileReader);
+        try (FileReader fileReader = new FileReader("city_ru.csv")) {
+            Scanner sc = new Scanner(fileReader);
             int i = 0;
-            while (scanner.hasNext()) {
-                String[] fileContent = scanner.nextLine().split(";");
+            while (sc.hasNextLine()) {
+                String[] file = sc.nextLine().split(";");
                 City city = new City();
-                city.setId(Integer.parseInt(fileContent[0]));
-                city.setName(fileContent[1]);
-                city.setRegion(fileContent[2]);
-                city.setDistrict(fileContent[3]);
-                city.setPopulation(Integer.parseInt(fileContent[4]));
+                city.setId(Integer.parseInt(file[0]));
+                city.setName(file[1]);
+                city.setRegion(file[2]);
+                city.setDistrict(file[3]);
+                city.setPopulation(Integer.parseInt(file[4]));
                 try {
-                    city.setFoundation(fileContent[5]);
+                    city.setFoundation(file[5]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     city.setFoundation(null);
-                    System.out.println(e.getMessage());
                 }
                 cities[i] = city;
                 i++;
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return cities;
     }
 
     @Override
     public void printAllCities(City[] cities) {
-        for (int i = 0; i < cities.length; i++) {
-            System.out.println(cities[i]);
+        for (City city : cities) {
+            System.out.println(city);
         }
     }
 
     @Override
     public void groupByRegion(City[] cities) {
+        String[] regions = new String[cities.length];
+        int[] counters = new int[cities.length];
 
+        int index = 0;
+        for (City city : cities) {
+            String region = city.getRegion();
+            int regionIndex = findRegionIndex(regions, region);
+
+            if (regionIndex == -1) {
+                regions[index] = region;
+                counters[index] = 1;
+                index++;
+            } else {
+                counters[regionIndex]++;
+            }
+        }
+        for (int i = 0; i < index; i++) {
+            System.out.println(regions[i] + " = " + counters[i]);
+        }
     }
 
     @Override
     public void searchByName(String name) {
-
+        City [] cities = readFile();
+        for (int i = 0; i <cities.length ; i++) {
+            if (name.equals(cities[i].getName())){
+                System.out.println(cities[i]);
+            }
+        }
     }
-}
+
+    private static int findRegionIndex(String[] regions, String region) {
+        for (int i = 0; i < regions.length; i++) {
+            if (regions[i] != null && regions[i].equals(region)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    }
+
+

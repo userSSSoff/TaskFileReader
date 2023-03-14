@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 // TODO: 11.02.2023
 //  надо создать класс City с полями:
 //  ID, NAME, REGION, DISTRICT, POPULATION, FOUNDATION.
